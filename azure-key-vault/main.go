@@ -1,16 +1,7 @@
-// A generated module for AzureKeyVault functions
+// A Dagger module to integrate with Azure Key Vault
 //
-// This module has been generated via dagger init and serves as a reference to
-// basic module structure as you get started with Dagger.
-//
-// Two functions have been pre-created. You can modify, delete, or add to them,
-// as needed. They demonstrate usage of arguments and return types using simple
-// echo and grep commands. The functions can be called from the dagger CLI or
-// from one of the SDKs.
-//
-// The first line in this comment block is a short description line and the
-// rest is a long description with more detail on the module's purpose or usage,
-// if appropriate. All modules should have a short description.
+// A Dagger module to integrate with Azure Key Vault
+// https://azure.microsoft.com/en-us/products/key-vault
 
 package main
 
@@ -53,6 +44,7 @@ func (m *AzureKeyVault) GetSecret(ctx context.Context, keyVaultName string, secr
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		log.Fatalf("failed to obtain a credential: %v", err)
+		return "", err
 	}
 
 	secretClientOptions := azsecrets.ClientOptions{
@@ -63,6 +55,7 @@ func (m *AzureKeyVault) GetSecret(ctx context.Context, keyVaultName string, secr
 	client, err := azsecrets.NewClient(keyVaultUrl, cred, &secretClientOptions)
 	if err != nil {
 		log.Fatalf("failed to connect to client: %v", err)
+		return "", err
 	}
 
 	// Get a secret. An empty string version gets the latest version of the secret.
@@ -70,6 +63,7 @@ func (m *AzureKeyVault) GetSecret(ctx context.Context, keyVaultName string, secr
 	resp, err := client.GetSecret(context.TODO(), secretName, version, nil)
 	if err != nil {
 		log.Fatalf("failed to get the secret: %v", err)
+		return "", err
 	}
 
 	return *resp.Value, nil
